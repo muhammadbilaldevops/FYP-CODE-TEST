@@ -77,6 +77,7 @@ class Config:
         'http://127.0.0.1:5173',   # Alternative localhost
         'http://localhost:5174',   # Alternative port
         'http://127.0.0.1:5174',   # Alternative localhost + port
+        'https://al-muslim-solar.vercel.app'
     ]
 
 

@@ -45,7 +45,8 @@ const getApiBaseUrl = () => {
     // Production - use Render backend URL
     // TODO: Replace with your actual Render backend URL
     // You can find this in your Render dashboard
-    return 'https://your-backend.onrender.com';
+    // return 'https://your-backend.onrender.com';
+    return 'https://fyp-code-test-production.up.railway.app';
   }
 };
 
