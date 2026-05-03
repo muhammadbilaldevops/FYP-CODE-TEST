@@ -1,0 +1,17 @@
+# robots.txt for Al Muslim Engineers Solar Website
+
+# Allow all search engines to crawl the site
+User-agent: *
+Allow: /
+
+# Disallow admin pages from being indexed
+Disallow: /admin/
+Disallow: /admin/login
+Disallow: /admin/dashboard
+
+# Sitemap location
+Sitemap: https://al-muslim-solar.netlify.app/sitemap.xml
+
+# Crawl-delay (optional, helps prevent server overload)
+Crawl-delay: 1
+

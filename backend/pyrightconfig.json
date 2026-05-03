@@ -1,0 +1,11 @@
+{
+  "venvPath": "d:\\Coding\\Cursor Code\\Practice",
+  "venv": ".venv",
+  "executionEnvironments": [
+    {
+      "root": "."
+    }
+  ],
+  "reportMissingImports": "none",
+  "reportGeneralTypeIssues": "none"
+}
