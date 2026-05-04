@@ -1035,9 +1035,14 @@ def init_db():
 
 # ==================== RUN APPLICATION ====================
 
+# IMPORTANT: Always initialize the database (create tables + default admin)
+# regardless of how the app is started (gunicorn on Railway OR python app.py locally).
+# Previously this was inside `if __name__ == '__main__':` which meant gunicorn
+# never ran it, so the admin table was empty on production → "Invalid credentials".
+init_db()
+
 if __name__ == '__main__':
     try:
-        init_db()
         print("=" * 50)
         print("AL-MUSLIM ENGINEERING - BACKEND SERVER")
         print("=" * 50)
