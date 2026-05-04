@@ -40,13 +40,20 @@ import { useTranslation } from '../hooks/useTranslation';
  * @param {boolean} isVisible - Controls visibility of chatbot button (default: true)
  * @returns {JSX.Element} The chatbot component
  */
-const Chatbot = ({ isVisible = true }) => {
+const Chatbot = ({ isVisible = true, onChatbotStateChange }) => {
   // Translation and language hooks
   const { t, language } = useTranslation()
   
   // State to track if chat window is open
   // Student Note: false = closed (only button visible), true = open (full chat window)
   const [isOpen, setIsOpen] = useState(false);
+
+  // Notify parent of state changes
+  useEffect(() => {
+    if (onChatbotStateChange) {
+      onChatbotStateChange(isOpen);
+    }
+  }, [isOpen, onChatbotStateChange]);
   
   // State to track if contact option has been shown
   // Student Note: Prevents showing contact option multiple times

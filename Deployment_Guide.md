@@ -1,5 +1,15 @@
 # Ultimate Deployment Guide (For Beginners)
 
+npm run dev
+
+# Navigate to the backend directory
+cd backend
+
+# Activate your virtual environment and start the Flask server
+..\.venv\Scripts\Activate.ps1
+python app.py
+
+
 > **Important Note about Vercel:** 
 > Vercel is the best platform in the world for **Frontend (React/Vite)**. However, it is **NOT** built for Python Backends that save uploaded files or use SQLite matching your project perfectly. Vercel uses "Serverless Functions" which means the server deletes itself after every single request. If a customer uploaded their CNIC or if we saved data to `almuslim_solar.db`, it would be completely erased in 10 seconds! 
 > 

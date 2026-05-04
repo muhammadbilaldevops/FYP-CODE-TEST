@@ -59,6 +59,7 @@ import UserDashboardPage from './pages/UserDashboardPage'
  */
 function App() {
   const [showFloatingButtons, setShowFloatingButtons] = useState(true);
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -162,10 +163,10 @@ function App() {
         </div>
 
         {/* Chatbot: Floating chat widget - appears on all pages */}
-        <Chatbot isVisible={showFloatingButtons} />
+        <Chatbot isVisible={showFloatingButtons} onChatbotStateChange={setIsChatbotOpen} />
         
-        {/* Floating Calculator Button - appears on all pages */}
-        <FloatingCalculatorButton isVisible={showFloatingButtons} />
+        {/* Floating Calculator Button - appears on all pages, hidden when chatbot is open */}
+        <FloatingCalculatorButton isVisible={showFloatingButtons && !isChatbotOpen} />
       </ErrorBoundary>
       </LanguageProvider>
     </Router>
