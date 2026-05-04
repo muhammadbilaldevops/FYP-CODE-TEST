@@ -45,6 +45,8 @@ import AdminLoginPage from './pages/AdminLoginPage'
 import AdminDashboardPage from './pages/AdminDashboardPage'
 import UserLoginPage from './pages/UserLoginPage'
 import UserDashboardPage from './pages/UserDashboardPage'
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
+import TermsAndConditionsPage from './pages/TermsAndConditionsPage'
 
 /**
  * App Component
@@ -136,6 +138,10 @@ function App() {
               {/* User Routes */}
               <Route path="/user/login" element={<UserLoginPage />} />
               <Route path="/user/dashboard" element={<UserDashboardPage />} />
+              
+              {/* Legal Routes */}
+              <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+              <Route path="/terms-conditions" element={<TermsAndConditionsPage />} />
               
               {/* 404 Page - For invalid URLs */}
               {/* Student Note: "*" matches any URL that doesn't match above routes */}
