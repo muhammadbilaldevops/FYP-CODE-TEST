@@ -170,6 +170,8 @@ class ProductionConfig(Config):
 
     if database_url:
         # Use full connection string from DATABASE_URL (e.g. Supabase)
+        if database_url.startswith("postgresql://"):
+            database_url = database_url.replace("postgresql://", "postgresql+pg8000://", 1)
         SQLALCHEMY_DATABASE_URI = database_url
     else:
         # Fallback: build PostgreSQL URL from separate pieces
