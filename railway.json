@@ -2,7 +2,6 @@
     "$schema": "https://railway.com/railway.schema.json",
     "build": {
       "builder": "NIXPACKS",
-      "buildCommand": "cd backend && pip install -r requirements.txt",
       "nixpacksPlan": {
         "providers": [
           "python"
@@ -13,7 +12,7 @@
     "deploy": {
       "runtime": "V2",
       "numReplicas": 1,
-      "startCommand": "cd backend && gunicorn app:app --bind 0.0.0.0:$PORT",
+      "startCommand": "gunicorn app:app --bind 0.0.0.0:$PORT",
       "sleepApplication": false,
       "useLegacyStacker": false,
       "ipv6EgressEnabled": false,
