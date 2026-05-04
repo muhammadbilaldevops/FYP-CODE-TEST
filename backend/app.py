@@ -1037,9 +1037,12 @@ def init_db():
 
 # IMPORTANT: Always initialize the database (create tables + default admin)
 # regardless of how the app is started (gunicorn on Railway OR python app.py locally).
-# Previously this was inside `if __name__ == '__main__':` which meant gunicorn
-# never ran it, so the admin table was empty on production → "Invalid credentials".
-init_db()
+try:
+    init_db()
+except Exception as e:
+    print(f"CRITICAL WARNING: Database initialization failed at startup: {e}")
+    # We do not raise the error, allowing gunicorn to start so we can see logs
+    # rather than crashing immediately with a 502 Bad Gateway.
 
 if __name__ == '__main__':
     try:
