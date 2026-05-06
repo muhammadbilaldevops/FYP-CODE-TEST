@@ -6,15 +6,13 @@
         "providers": [
           "python"
         ]
-      },
-      "buildEnvironment": "V3"
+      }
     },
     "deploy": {
       "runtime": "V2",
       "numReplicas": 1,
       "startCommand": "cd backend && gunicorn app:app --bind 0.0.0.0:$PORT",
       "sleepApplication": false,
-      "useLegacyStacker": false,
       "ipv6EgressEnabled": false,
       "multiRegionConfig": {
         "us-west2": {
