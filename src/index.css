@@ -158,11 +158,15 @@ html {
     @apply font-sans antialiased;
     background-color: #ffffff;
     overscroll-behavior-y: none;
+    overscroll-behavior-x: none;
+    overflow-x: hidden;
   }
   
   html {
     background-color: #ffffff;
     overscroll-behavior-y: none;
+    overscroll-behavior-x: none;
+    overflow-x: hidden;
   }
 }
 

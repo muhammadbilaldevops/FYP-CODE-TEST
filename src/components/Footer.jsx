@@ -129,26 +129,30 @@ const Footer = () => {
           {/* Student Note: Quick links to service pages for easy navigation */}
           <div className="flex flex-col">
             {/* Section Heading */}
-            <h3 className="text-base sm:text-lg font-bold mb-5 text-center">{t('footer.solutions')}</h3>
-            {/* Links List */}
+            <h3 className="text-base sm:text-lg font-bold mb-5 text-left">{t('footer.solutions')}</h3>
+            {/* Links List - graduated font sizes: largest on top, smallest on bottom */}
             <ul className="space-y-2.5">
-              {/* Map through solutions array to create links */}
-              {/* Student Note: .map() creates a list item for each solution
-                  - key={index} helps React track list items efficiently */}
-              {solutions.map((item, index) => (
-                <li key={index} className="text-center">
-                  {/* Link component for internal navigation */}
-                  {/* Student Note: Link prevents page reload (SPA navigation)
-                      - hover:text-blue-400: Color change on hover
-                      - block: Makes entire area clickable */}
-                  <Link
-                    to={item.link}
-                    className="text-gray-400 hover:text-blue-400 transition-colors text-xs sm:text-sm block py-1"
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
+              {solutions.map((item, index) => {
+                // Graduated font sizes: biggest at top, smallest at bottom
+                const fontSizes = [
+                  'text-base sm:text-lg',    // 1st link - largest
+                  'text-sm sm:text-base',     // 2nd link
+                  'text-sm',                  // 3rd link
+                  'text-xs sm:text-sm',       // 4th link
+                  'text-xs',                  // 5th link - smallest
+                ];
+                const fontSize = fontSizes[index] || 'text-xs';
+                return (
+                  <li key={index} className="text-left">
+                    <Link
+                      to={item.link}
+                      className={`text-gray-400 hover:text-blue-400 transition-colors ${fontSize} block py-1`}
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
@@ -156,20 +160,29 @@ const Footer = () => {
           {/* Student Note: Navigation links to main pages */}
           <div className="flex flex-col">
             {/* Section Heading */}
-            <h3 className="text-base sm:text-lg font-bold mb-5 text-center">{t('footer.company')}</h3>
-            {/* Links List */}
+            <h3 className="text-base sm:text-lg font-bold mb-5 text-left">{t('footer.company')}</h3>
+            {/* Links List - graduated font sizes: largest on top, smallest on bottom */}
             <ul className="space-y-2.5">
-              {/* Map through company links array */}
-              {companyLinks.map((item, index) => (
-                <li key={index} className="text-center">
-                  <Link
-                    to={item.link}
-                    className="text-gray-400 hover:text-blue-400 transition-colors text-xs sm:text-sm block py-1"
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
+              {companyLinks.map((item, index) => {
+                const fontSizes = [
+                  'text-base sm:text-lg',    // 1st link - largest
+                  'text-sm sm:text-base',     // 2nd link
+                  'text-sm',                  // 3rd link
+                  'text-xs sm:text-sm',       // 4th link
+                  'text-xs',                  // 5th link - smallest
+                ];
+                const fontSize = fontSizes[index] || 'text-xs';
+                return (
+                  <li key={index} className="text-left">
+                    <Link
+                      to={item.link}
+                      className={`text-gray-400 hover:text-blue-400 transition-colors ${fontSize} block py-1`}
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
