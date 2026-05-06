@@ -78,7 +78,7 @@ const Footer = () => {
             - Desktop: 4 columns
             - gap-8: Spacing between columns */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 mb-8 sm:mb-12 items-start">
-          
+
           {/* Column 1: Company Info & Contact Details */}
           {/* Student Note: First column contains company branding and contact info */}
           <div className="flex flex-col h-full">
@@ -90,13 +90,13 @@ const Footer = () => {
               {/* Company name - responsive font size */}
               <span className="text-lg sm:text-xl font-bold">{t('footer.companyName')}</span>
             </Link>
-            
+
             {/* Company Description */}
             {/* Student Note: Brief company description for SEO and user information */}
             <p className="text-gray-400 mb-5 text-xs sm:text-sm leading-relaxed">
               {t('footer.description')}
             </p>
-            
+
             {/* Contact Information */}
             {/* Student Note: All contact methods with clickable links
                 - tel: links work on mobile devices
@@ -130,29 +130,18 @@ const Footer = () => {
           <div className="flex flex-col">
             {/* Section Heading */}
             <h3 className="text-base sm:text-lg font-bold mb-5 text-left">{t('footer.solutions')}</h3>
-            {/* Links List - graduated font sizes: largest on top, smallest on bottom */}
+            {/* Links List */}
             <ul className="space-y-2.5">
-              {solutions.map((item, index) => {
-                // Graduated font sizes: biggest at top, smallest at bottom
-                const fontSizes = [
-                  'text-base sm:text-lg',    // 1st link - largest
-                  'text-sm sm:text-base',     // 2nd link
-                  'text-sm',                  // 3rd link
-                  'text-xs sm:text-sm',       // 4th link
-                  'text-xs',                  // 5th link - smallest
-                ];
-                const fontSize = fontSizes[index] || 'text-xs';
-                return (
-                  <li key={index} className="text-left">
-                    <Link
-                      to={item.link}
-                      className={`text-gray-400 hover:text-blue-400 transition-colors ${fontSize} block py-1`}
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                );
-              })}
+              {solutions.map((item, index) => (
+                <li key={index} className="text-left">
+                  <Link
+                    to={item.link}
+                    className="text-gray-400 hover:text-blue-400 transition-colors text-xs sm:text-sm block py-1"
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -161,28 +150,18 @@ const Footer = () => {
           <div className="flex flex-col">
             {/* Section Heading */}
             <h3 className="text-base sm:text-lg font-bold mb-5 text-left">{t('footer.company')}</h3>
-            {/* Links List - graduated font sizes: largest on top, smallest on bottom */}
+            {/* Links List */}
             <ul className="space-y-2.5">
-              {companyLinks.map((item, index) => {
-                const fontSizes = [
-                  'text-base sm:text-lg',    // 1st link - largest
-                  'text-sm sm:text-base',     // 2nd link
-                  'text-sm',                  // 3rd link
-                  'text-xs sm:text-sm',       // 4th link
-                  'text-xs',                  // 5th link - smallest
-                ];
-                const fontSize = fontSizes[index] || 'text-xs';
-                return (
-                  <li key={index} className="text-left">
-                    <Link
-                      to={item.link}
-                      className={`text-gray-400 hover:text-blue-400 transition-colors ${fontSize} block py-1`}
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                );
-              })}
+              {companyLinks.map((item, index) => (
+                <li key={index} className="text-left">
+                  <Link
+                    to={item.link}
+                    className="text-gray-400 hover:text-blue-400 transition-colors text-xs sm:text-sm block py-1"
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -191,7 +170,7 @@ const Footer = () => {
           <div className="flex flex-col">
             {/* Section Heading */}
             <h3 className="text-base sm:text-lg font-bold mb-5 text-center">{t('footer.stayConnected')}</h3>
-            
+
             {/* Social Media Links */}
             {/* Student Note: External links use <a> tag, not Link component
                 - target="_blank": Opens in new tab
@@ -221,7 +200,7 @@ const Footer = () => {
             <p className="text-gray-400 text-sm text-center">
               © {new Date().getFullYear()} {t('footer.companyName')}. {t('footer.allRightsReserved')}
             </p>
-            
+
             {/* Legal Links */}
             <div className="flex flex-wrap justify-center gap-4 md:gap-6">
               <Link
