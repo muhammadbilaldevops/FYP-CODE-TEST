@@ -39,20 +39,21 @@ const Footer = () => {
   // Solutions/Services links data
   // Student Note: Storing data in arrays makes it reusable and maintainable
   const solutions = [
-    { name: 'Residential Solar Systems', link: '/services' },
     { name: 'Commercial Solar Systems', link: '/services' },
-    { name: 'Net Metering Solutions', link: '/services' },
+    { name: 'Residential Solar Systems', link: '/services' },
     { name: 'Maintenance & Support', link: '/services' },
+    { name: 'Net Metering Solutions', link: '/services' },
     { name: 'Energy Consulting', link: '/services' },
   ]
 
   // Company navigation links
   const companyLinks = [
+    { name: 'Get Quote', link: '/quote' },
     { name: 'About Us', link: '/about' },
     { name: 'Services', link: '/services' },
     { name: 'Projects', link: '/projects' },
     { name: 'Contact', link: '/contact' },
-    { name: 'Get Quote', link: '/quote' },
+  
   ]
 
   // Social media links
