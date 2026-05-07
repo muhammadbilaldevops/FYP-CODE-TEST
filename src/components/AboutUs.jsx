@@ -7,30 +7,14 @@
  * Student Note: Statistics build credibility and trust with potential clients
  */
 
-import React from 'react'
+import CompanyStats from './CompanyStats'
 
 /**
  * AboutUs Component
  * 
  * Displays company overview and key statistics in a visual format.
- * 
- * Student Note:
- * - Data is stored in an array for easy maintenance
- * - Cards use hover effects for interactivity
- * - Responsive grid adapts to screen size
- * 
- * @returns {JSX.Element} The about us section
  */
 const AboutUs = () => {
-  // Company statistics data
-  // Student Note: Keeping data separate makes it easy to update
-  const stats = [
-    { value: '8+', label: 'Years of Experience' },
-    { value: '500+', label: 'Satisfied Clients' },
-    { value: '50+', label: 'Engineers & Technicians' },
-    { value: '50MW+', label: 'Total Capacity Installed' },
-  ]
-
   return (
     <section id="about" className="section-padding bg-gray-50">
       <div className="container-custom">
@@ -49,18 +33,9 @@ const AboutUs = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
-          {stats.map((stat, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-lg p-6 text-center shadow-md hover:shadow-lg transition-shadow duration-300"
-            >
-              <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-600 mb-2">
-                {stat.value}
-              </div>
-              <div className="text-gray-700 font-medium">{stat.label}</div>
-            </div>
-          ))}
+        {/* Standardized Statistics Section */}
+        <div className="max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-2xl">
+          <CompanyStats />
         </div>
       </div>
     </section>

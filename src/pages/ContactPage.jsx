@@ -90,11 +90,13 @@ const ContactPage = () => {
               <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-4">{t('contact.whatsapp')}</h3>
               <div className="space-y-2">
                 <p className="text-sm sm:text-base text-slate-900 font-semibold mb-2">Mubashir Solar Cordinator</p>
-                {/* Clickable phone number - larger on mobile for easy tapping */}
+                {/* Clickable WhatsApp link - redirects to WhatsApp application */}
                 <a 
-                  href="tel:+923318441722" 
+                  href="https://wa.me/923318441722" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="block text-green-600 font-semibold text-lg sm:text-xl hover:text-green-700 transition-all duration-300 transform hover:scale-110 cursor-pointer hover:underline py-2 px-4 rounded-lg hover:bg-green-100"
-                  aria-label="Call Mubashir Solar Coordinator at 0331 8441722"
+                  aria-label="Message Mubashir Solar Coordinator on WhatsApp at 0331 8441722"
                 >
                   0331 8441722
                 </a>

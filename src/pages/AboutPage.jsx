@@ -16,7 +16,6 @@ import React from 'react'
 import AboutUs from '../components/AboutUs'
 import CoreValues from '../components/CoreValues'
 import Certifications from '../components/Certifications'
-import { FiAward, FiUsers, FiTrendingUp, FiShield } from 'react-icons/fi'
 import { useTranslation } from '../hooks/useTranslation'
 
 /**
@@ -30,35 +29,6 @@ import { useTranslation } from '../hooks/useTranslation'
 const AboutPage = () => {
   const { t } = useTranslation()
   
-  // Company statistics data
-  // Student Note: Defining data as constants makes it easy to update and maintain
-  const stats = [
-    {
-      icon: <FiAward className="text-4xl text-blue-600" />,
-      value: '10+',
-      labelKey: 'about.stats.experience',
-      descriptionKey: 'about.stats.experienceDesc'
-    },
-    {
-      icon: <FiUsers className="text-4xl text-green-600" />,
-      value: '1500+',
-      labelKey: 'about.stats.clients',
-      descriptionKey: 'about.stats.clientsDesc'
-    },
-    {
-      icon: <FiTrendingUp className="text-4xl text-purple-600" />,
-      value: '200MW+',
-      labelKey: 'about.stats.capacity',
-      descriptionKey: 'about.stats.capacityDesc'
-    },
-    {
-      icon: <FiShield className="text-4xl text-red-600" />,
-      value: '100%',
-      labelKey: 'about.stats.quality',
-      descriptionKey: 'about.stats.qualityDesc'
-    }
-  ]
-
   return (
     <div className="min-h-screen">
       {/* Page Header Section */}
@@ -78,51 +48,6 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* Company Statistics Section */}
-      {/* Student Note: Grid layout automatically arranges items in responsive columns
-          - Mobile: 1 column (stacked)
-          - Tablet: 2 columns
-          - Desktop: 4 columns
-          - Gap provides spacing between cards */}
-      <section className="section-padding bg-white py-12 sm:py-16">
-        <div className="container-custom px-4 sm:px-6 lg:px-8">
-          {/* Responsive grid: adapts to screen size */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            {/* Map through stats array to create cards */}
-            {/* Student Note: .map() is used to render lists dynamically in React */}
-            {/* Map through stats array to create statistic cards */}
-            {/* Student Note: .map() creates a card for each statistic
-                - key={index} helps React track which item is which
-                - Each card is self-contained and reusable */}
-            {stats.map((stat, index) => (
-              <div 
-                key={index} 
-                className="text-center p-6 sm:p-8 bg-gray-50 rounded-xl hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
-              >
-                {/* Icon container */}
-                {/* Student Note: Icons are rendered as JSX elements from the stats array */}
-                <div className="flex justify-center mb-4 sm:mb-6">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center">
-                    {stat.icon}
-                  </div>
-                </div>
-                {/* Statistic value - large, bold number */}
-                <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-2 sm:mb-3">
-                  {stat.value}
-                </div>
-                {/* Statistic label - what the number represents */}
-                <div className="text-base sm:text-lg font-semibold text-gray-700 mb-2">
-                  {t(stat.labelKey)}
-                </div>
-                {/* Statistic description - additional context */}
-                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                  {t(stat.descriptionKey)}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* About Us Section - Company overview */}
       {/* Student Note: This is a separate component for better code organization

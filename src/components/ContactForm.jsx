@@ -287,12 +287,20 @@ const ContactForm = () => {
                   <FiPhone className="text-blue-600 mr-3 mt-1 flex-shrink-0" />
                   <div>
                     <div className="font-semibold text-slate-900">Phone</div>
-                    <a
-                      href="tel:+923000000123"
-                      className="text-gray-600 hover:text-blue-600"
-                    >
-                      +92 300 0000123
-                    </a>
+                    <div className="flex flex-col">
+                      <a
+                        href="tel:+923419231892"
+                        className="text-gray-600 hover:text-blue-600"
+                      >
+                        0341 9231892
+                      </a>
+                      <a
+                        href="tel:+923318441722"
+                        className="text-gray-600 hover:text-blue-600"
+                      >
+                        0331 8441722
+                      </a>
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -300,10 +308,10 @@ const ContactForm = () => {
                   <div>
                     <div className="font-semibold text-slate-900">Email</div>
                     <a
-                      href="mailto:info@almuslimengineers.com"
+                      href="mailto:info@almuslimengineering.com"
                       className="text-gray-600 hover:text-blue-600"
                     >
-                      info@almuslimengineers.com
+                      info@almuslimengineering.com
                     </a>
                   </div>
                 </div>
@@ -312,7 +320,7 @@ const ContactForm = () => {
                   <div>
                     <div className="font-semibold text-slate-900">Office</div>
                     <div className="text-gray-600">
-                      Office # 123, ABC Plaza, XYZ Road, Lahore, Pakistan
+                      Al Muslim engineering solar system and cooling center, Rawalpindi
                     </div>
                   </div>
                 </div>
@@ -322,7 +330,8 @@ const ContactForm = () => {
                     <div className="font-semibold text-slate-900">
                       Business Hours
                     </div>
-                    <div className="text-gray-600">Mon-Fri: 9:00 AM - 5:00 PM</div>
+                    <div className="text-gray-600">Monday - Sunday: 9:00 AM - 8:00 PM</div>
+                    <div className="text-gray-600">Friday: Closed</div>
                   </div>
                 </div>
               </div>
@@ -336,9 +345,12 @@ const ContactForm = () => {
                 Need immediate assistance? Our emergency support team is
                 available round the clock.
               </p>
-              <button className="btn-secondary w-full sm:w-auto">
+              <a 
+                href="tel:+923419231892" 
+                className="btn-secondary w-full sm:w-auto inline-block text-center"
+              >
                 Call Emergency Line
-              </button>
+              </a>
             </div>
 
             <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">

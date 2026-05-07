@@ -2,37 +2,15 @@
  * ENHANCED HOME PAGE
  * 
  * Interactive homepage with comprehensive solar solutions information.
- * 
- * Student Note: This is the main landing page that includes:
- * - Hero slider with background images and CTA buttons
- * - Animated statistics counters
- * - Solar solutions showcase
- * - Why choose us section
- * - Testimonials carousel
- * - Brand slider
- * - Call-to-action sections
- * 
- * Key Features:
- * - Scroll-triggered animations using Intersection Observer
- * - Responsive design for all screen sizes
- * - Component composition for reusability
- * - Smooth animations and transitions
- * 
- * Technical Concepts:
- * - useState: Manages visibility state for animations
- * - useEffect: Sets up Intersection Observer for scroll animations
- * - Component composition: Uses multiple child components
- * - Responsive design: Tailwind breakpoints for mobile/desktop
  */
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FiZap, FiSun, FiBattery, FiTrendingUp, FiCheckCircle, FiArrowRight } from 'react-icons/fi';
 import HeroSlider from '../components/HeroSlider';
-import AnimatedCounter from '../components/AnimatedCounter';
+import CompanyStats from '../components/CompanyStats';
 import TestimonialsCarousel from '../components/TestimonialsCarousel';
 import BrandSlider from '../components/BrandSlider';
-import { companyInfo, solarSystems } from '../data/companyData';
 import { useTranslation } from '../hooks/useTranslation';
 
 /**
@@ -40,52 +18,30 @@ import { useTranslation } from '../hooks/useTranslation';
  * 
  * Main landing page component that showcases the company's solar solutions
  * and services with interactive elements and animations.
- * 
- * @returns {JSX.Element} The complete homepage layout
  */
 const HomePage = () => {
   const { t } = useTranslation()
   
-  // State to track which elements are visible for animations
-  // Student Note: Object with element IDs as keys, boolean values
-  // Example: { 'section1': true, 'section2': false }
   const [isVisible, setIsVisible] = useState({});
 
-  /**
-   * Intersection Observer for Scroll Animations
-   * 
-   * Student Note: This effect sets up an observer that watches for elements
-   * entering the viewport. When an element becomes visible, it updates the
-   * isVisible state, which triggers animations.
-   * 
-   * How it works:
-   * 1. Creates an IntersectionObserver that watches for elements
-   * 2. When an element enters viewport (threshold: 0.1 = 10% visible)
-   * 3. Updates isVisible state for that element
-   * 4. Cleanup function disconnects observer when component unmounts
-   */
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            // Mark element as visible when it enters viewport
             setIsVisible((prev) => ({ ...prev, [entry.target.id]: true }));
           }
         });
       },
-      { threshold: 0.1 } // Trigger when 10% of element is visible
+      { threshold: 0.1 }
     );
 
-    // Find all elements with data-animate attribute
     const elements = document.querySelectorAll('[data-animate]');
     elements.forEach((el) => observer.observe(el));
 
-    // Cleanup: disconnect observer when component unmounts
     return () => observer.disconnect();
   }, []);
 
-  // Solutions data
   const solutions = [
     {
       icon: FiSun,
@@ -117,31 +73,13 @@ const HomePage = () => {
     }
   ];
 
-
   return (
     <div className="overflow-x-hidden">
       {/* Hero Slider Section */}
       <HeroSlider />
 
-      {/* Statistics Section - Animated Counters */}
-      <section className="bg-gradient-to-r from-blue-900 via-green-800 to-blue-900 text-white py-20">
-        <div className="container-custom">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
-            <div data-animate id="stat1" className={`text-center transition-all duration-1000 ${isVisible.stat1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-              <AnimatedCounter end={500} suffix="+" label={t('home.stats.systemsInstalled')} />
-            </div>
-            <div data-animate id="stat2" className={`text-center transition-all duration-1000 delay-200 ${isVisible.stat2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-              <AnimatedCounter end={5} suffix="+ MW" label={t('home.stats.megawatts')} />
-            </div>
-            <div data-animate id="stat3" className={`text-center transition-all duration-1000 delay-400 ${isVisible.stat3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-              <AnimatedCounter end={450} suffix="+" label={t('home.stats.customersQuoted')} />
-            </div>
-            <div data-animate id="stat4" className={`text-center transition-all duration-1000 delay-600 ${isVisible.stat4 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-              <AnimatedCounter end={13} suffix="+" label={`${t('home.stats.experience')} Years`} />
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Statistics Section - Consistent with all pages */}
+      <CompanyStats />
 
       {/* Solutions Section */}
       <section className="section-padding bg-white py-20" data-animate id="solutions">
@@ -258,13 +196,9 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Trusted Brands Slider */}
       <BrandSlider />
-
-      {/* Testimonials Carousel */}
       <TestimonialsCarousel />
 
-      {/* CTA Section */}
       <section className="section-padding bg-gradient-to-r from-blue-600 via-emerald-600 to-blue-600 text-white py-20">
         <div className="container-custom text-center">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
