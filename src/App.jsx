@@ -28,7 +28,6 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import ErrorBoundary from './components/ErrorBoundary'
 import Chatbot from './components/Chatbot'
-import FloatingCalculatorButton from './components/FloatingCalculatorButton'
 import AdminTools from './components/AdminTools'
 import ScrollToTop from './components/ScrollToTop'
 
@@ -170,9 +169,6 @@ function App() {
 
         {/* Chatbot: Floating chat widget - appears on all pages */}
         <Chatbot isVisible={showFloatingButtons} onChatbotStateChange={setIsChatbotOpen} />
-        
-        {/* Floating Calculator Button - appears on all pages, hidden when chatbot is open */}
-        <FloatingCalculatorButton isVisible={showFloatingButtons && !isChatbotOpen} />
       </ErrorBoundary>
       </LanguageProvider>
     </Router>

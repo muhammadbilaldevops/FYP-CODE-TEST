@@ -17,7 +17,9 @@
 import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { FiMenu, FiX, FiGlobe, FiUser } from 'react-icons/fi'
+import { FaCalculator } from 'react-icons/fa'
 import Logo from './Logo'
+import AdvancedSolarCalculator from './AdvancedSolarCalculator'
 import { useTranslation } from '../hooks/useTranslation'
 import { useLanguage } from '../contexts/LanguageContext'
 
@@ -41,6 +43,9 @@ const Header = () => {
   // Get current location/path from React Router
   // Student Note: This helps us highlight the active menu item
   const location = useLocation()
+
+  // State to track if calculator modal is open
+  const [showCalculator, setShowCalculator] = useState(false)
 
   // Language and translation hooks
   const { t } = useTranslation()
@@ -143,6 +148,17 @@ const Header = () => {
               <span className="hidden lg:inline">{isEnglish ? 'EN' : 'UR'}</span>
             </button>
 
+            {/* Solar Calculator Button */}
+            <button
+              onClick={() => setShowCalculator(true)}
+              className="group relative bg-gradient-to-r from-emerald-600 to-green-500 hover:from-emerald-500 hover:to-green-400 text-white px-2 py-1.5 rounded-xl transition-all duration-300 font-bold shadow-lg hover:shadow-xl transform hover:scale-105 flex flex-col items-center justify-center gap-0.5 text-center min-w-[80px]"
+              title={t('header.calculator')}
+              aria-label="Open Calculator"
+            >
+              <FaCalculator className="text-lg mx-auto" />
+              <span className="text-[10px] uppercase tracking-wider text-center w-full block">{t('header.calculator')}</span>
+            </button>
+
             {/* User Login Button Desktop */}
             <Link
               to="/user/dashboard"
@@ -199,6 +215,18 @@ const Header = () => {
                   <span>{isEnglish ? 'Switch to Urdu' : 'Switch to English'}</span>
                 </button>
 
+                {/* Solar Calculator Button - Mobile */}
+                <button
+                  onClick={() => {
+                    setShowCalculator(true);
+                    handleMobileMenuClick();
+                  }}
+                  className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-emerald-600 to-green-500 text-white px-4 py-3 rounded-xl font-bold transition-all duration-300 shadow-md"
+                >
+                  <FaCalculator className="text-base" />
+                  <span>{t('header.calculator')}</span>
+                </button>
+
                 {/* User Login Button - Mobile */}
                 <Link
                   to="/user/dashboard"
@@ -214,6 +242,12 @@ const Header = () => {
           </div>
         )}
       </div>
+
+      {/* Advanced Calculator Modal */}
+      <AdvancedSolarCalculator
+        isOpen={showCalculator}
+        onClose={() => setShowCalculator(false)}
+      />
     </header>
   )
 }

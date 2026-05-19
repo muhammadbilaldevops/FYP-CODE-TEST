@@ -1,0 +1,2037 @@
+
+import 'dart:math';
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const SerenityApp());
+}
+
+// ============================================================
+//  APP ROOT
+// ============================================================
+class SerenityApp extends StatelessWidget {
+  const SerenityApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Serenity',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF5C6BC0),
+          brightness: Brightness.light,
+        ),
+        fontFamily: 'Roboto',
+        appBarTheme: const AppBarTheme(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          foregroundColor: Color(0xFF2E3250),
+        ),
+      ),
+      home: const SplashScreen(),
+    );
+  }
+}
+
+// ============================================================
+//  SPLASH SCREEN
+// ============================================================
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnim;
+  late Animation<double> _scaleAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1800),
+    );
+    _fadeAnim = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
+    );
+    _scaleAnim = Tween<double>(begin: 0.7, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.elasticOut),
+    );
+    _controller.forward();
+
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const MainScreen()),
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF3949AB), Color(0xFF7E57C2), Color(0xFF26C6DA)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Center(
+          child: FadeTransition(
+            opacity: _fadeAnim,
+            child: ScaleTransition(
+              scale: _scaleAnim,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.self_improvement,
+                      size: 60,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  const Text(
+                    'SERENITY',
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                      letterSpacing: 6,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Your Daily Wellbeing Companion',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.white70,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 50),
+                  const CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    strokeWidth: 2,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+//  MAIN SCREEN  (Bottom Navigation Host)
+// ============================================================
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  int _selectedIndex = 0;
+
+  final List<Widget> _pages = const [
+    HomeTab(),
+    MoodTrackerTab(),
+    BreathingTab(),
+    WaterTrackerTab(),
+    CommunityTab(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack(index: _selectedIndex, children: _pages),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (i) => setState(() => _selectedIndex = i),
+        backgroundColor: Colors.white,
+        indicatorColor: const Color(0xFF5C6BC0).withOpacity(0.15),
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home, color: Color(0xFF5C6BC0)),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.mood_outlined),
+            selectedIcon: Icon(Icons.mood, color: Color(0xFF5C6BC0)),
+            label: 'Mood',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.air_outlined),
+            selectedIcon: Icon(Icons.air, color: Color(0xFF5C6BC0)),
+            label: 'Breathe',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.water_drop_outlined),
+            selectedIcon: Icon(Icons.water_drop, color: Color(0xFF5C6BC0)),
+            label: 'Hydrate',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.people_outline),
+            selectedIcon: Icon(Icons.people, color: Color(0xFF5C6BC0)),
+            label: 'Community',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ============================================================
+//  CONSTANTS
+// ============================================================
+const kPrimaryColor    = Color(0xFF5C6BC0);
+const kSecondaryColor  = Color(0xFF26C6DA);
+const kBackgroundColor = Color(0xFFF5F7FF);
+const kCardColor       = Colors.white;
+const kTextDark        = Color(0xFF2E3250);
+const kTextMid         = Color(0xFF6B7280);
+
+// ============================================================
+//  TAB 1   HOME
+// ============================================================
+class HomeTab extends StatefulWidget {
+  const HomeTab({super.key});
+
+  @override
+  State<HomeTab> createState() => _HomeTabState();
+}
+
+class _HomeTabState extends State<HomeTab> {
+  final List<Map<String, dynamic>> _goals = [
+    {'title': 'Meditate for 10 minutes', 'done': false, 'icon': Icons.self_improvement},
+    {'title': 'Drink 8 glasses of water', 'done': false, 'icon': Icons.water_drop},
+    {'title': 'Go for a 20-minute walk', 'done': false, 'icon': Icons.directions_walk},
+    {'title': 'Read for 15 minutes', 'done': false, 'icon': Icons.menu_book},
+    {'title': 'Call a friend or family member', 'done': false, 'icon': Icons.phone},
+    {'title': 'Write 3 things you are grateful for', 'done': false, 'icon': Icons.edit_note},
+  ];
+
+  final List<String> _affirmations = [
+    "You are capable of amazing things.",
+    "Every day is a fresh start.",
+    "Your mental health matters.",
+    "You are stronger than you think.",
+    "Small steps lead to big changes.",
+    "It is okay to ask for help.",
+    "You deserve peace and happiness.",
+  ];
+
+  late String _todayAffirmation;
+
+  @override
+  void initState() {
+    super.initState();
+    final rng = Random();
+    _todayAffirmation = _affirmations[rng.nextInt(_affirmations.length)];
+  }
+
+  int get _completedGoals => _goals.where((g) => g['done'] == true).length;
+
+  String _greeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return 'Good Morning';
+    if (hour < 17) return 'Good Afternoon';
+    return 'Good Evening';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: kBackgroundColor,
+      body: CustomScrollView(
+        slivers: [
+          // App Bar
+          SliverAppBar(
+            expandedHeight: 200,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF3949AB), Color(0xFF7E57C2)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _greeting(),
+                                  style: const TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                const Text(
+                                  'Welcome Back!',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            CircleAvatar(
+                              radius: 28,
+                              backgroundColor: Colors.white.withOpacity(0.2),
+                              child: const Icon(
+                                Icons.person,
+                                color: Colors.white,
+                                size: 32,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.format_quote,
+                                  color: Colors.white70, size: 18),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  _todayAffirmation,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          SliverPadding(
+            padding: const EdgeInsets.all(16),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+
+                // Progress Card
+                _buildProgressCard(),
+                const SizedBox(height: 20),
+
+                // Quick Stats Row
+                _buildQuickStats(),
+                const SizedBox(height: 20),
+
+                // Daily Goals
+                const Text(
+                  'Daily Wellness Goals',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: kTextDark,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                ..._goals.asMap().entries.map((entry) {
+                  final i = entry.key;
+                  final goal = entry.value;
+                  return _buildGoalCard(goal, i);
+                }),
+
+                const SizedBox(height: 20),
+
+                // Wellness Tip
+                _buildWellnessTip(),
+                const SizedBox(height: 30),
+              ]),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProgressCard() {
+    final percent = _goals.isEmpty ? 0.0 : _completedGoals / _goals.length;
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF5C6BC0), Color(0xFF26C6DA)],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: kPrimaryColor.withOpacity(0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Today's Progress",
+            style: TextStyle(color: Colors.white70, fontSize: 14),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '$_completedGoals of ${_goals.length} goals completed',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 14),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: LinearProgressIndicator(
+              value: percent,
+              backgroundColor: Colors.white.withOpacity(0.25),
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+              minHeight: 10,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '${(percent * 100).toStringAsFixed(0)}% complete',
+            style: const TextStyle(color: Colors.white70, fontSize: 12),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickStats() {
+    return Row(
+      children: [
+        _statCard('Streak', '5 Days', Icons.local_fire_department,
+            const Color(0xFFFF7043)),
+        const SizedBox(width: 12),
+        _statCard('Points', '320', Icons.star, const Color(0xFFFFC107)),
+        const SizedBox(width: 12),
+        _statCard('Level', 'Bronze', Icons.emoji_events,
+            const Color(0xFF8D6E63)),
+      ],
+    );
+  }
+
+  Widget _statCard(
+      String label, String value, IconData icon, Color color) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: kCardColor,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 28),
+            const SizedBox(height: 6),
+            Text(value,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: color, fontSize: 15)),
+            Text(label,
+                style: const TextStyle(color: kTextMid, fontSize: 11)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGoalCard(Map<String, dynamic> goal, int index) {
+    return GestureDetector(
+      onTap: () => setState(() => _goals[index]['done'] = !_goals[index]['done']),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        margin: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: goal['done'] ? kPrimaryColor.withOpacity(0.08) : kCardColor,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: goal['done']
+                ? kPrimaryColor.withOpacity(0.4)
+                : Colors.transparent,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: goal['done']
+                    ? kPrimaryColor.withOpacity(0.15)
+                    : Colors.grey.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(goal['icon'],
+                  color: goal['done'] ? kPrimaryColor : Colors.grey, size: 22),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                goal['title'],
+                style: TextStyle(
+                  fontSize: 14,
+                  color: goal['done'] ? kPrimaryColor : kTextDark,
+                  decoration: goal['done']
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none,
+                  fontWeight: goal['done']
+                      ? FontWeight.normal
+                      : FontWeight.w500,
+                ),
+              ),
+            ),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: Icon(
+                goal['done']
+                    ? Icons.check_circle
+                    : Icons.radio_button_unchecked,
+                key: ValueKey(goal['done']),
+                color: goal['done'] ? kPrimaryColor : Colors.grey,
+                size: 24,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWellnessTip() {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF8E1),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFFFFCC02), width: 1.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          Row(
+            children: [
+              Icon(Icons.lightbulb, color: Color(0xFFFFAB00), size: 22),
+              SizedBox(width: 8),
+              Text(
+                'Wellness Tip of the Day',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF7B5800),
+                  fontSize: 15,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          Text(
+            'Social connections are vital for wellbeing. '
+                'Spending quality time with people you care about reduces '
+                'stress hormones, boosts immunity, and can even lengthen '
+                'your life. Aim for at least one meaningful conversation today.',
+            style: TextStyle(
+              color: Color(0xFF5D4037),
+              fontSize: 13,
+              height: 1.6,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ============================================================
+//  TAB 2   MOOD TRACKER
+// ============================================================
+class MoodTrackerTab extends StatefulWidget {
+  const MoodTrackerTab({super.key});
+
+  @override
+  State<MoodTrackerTab> createState() => _MoodTrackerTabState();
+}
+
+class _MoodTrackerTabState extends State<MoodTrackerTab> {
+  int? _selectedMood;
+  final TextEditingController _noteController = TextEditingController();
+  final List<Map<String, dynamic>> _moodLog = [];
+
+  final List<Map<String, dynamic>> _moods = [
+    {'emoji': 'Very Bad',   'icon': Icons.sentiment_very_dissatisfied, 'color': Color(0xFFEF5350), 'label': 'Very Bad'},
+    {'emoji': 'Bad',        'icon': Icons.sentiment_dissatisfied,       'color': Color(0xFFFF7043), 'label': 'Bad'},
+    {'emoji': 'Neutral',    'icon': Icons.sentiment_neutral,            'color': Color(0xFFFFC107), 'label': 'Neutral'},
+    {'emoji': 'Good',       'icon': Icons.sentiment_satisfied,          'color': Color(0xFF66BB6A), 'label': 'Good'},
+    {'emoji': 'Very Good',  'icon': Icons.sentiment_very_satisfied,     'color': Color(0xFF26A69A), 'label': 'Very Good'},
+  ];
+
+  void _saveMood() {
+    if (_selectedMood == null) return;
+    setState(() {
+      _moodLog.insert(0, {
+        'mood': _moods[_selectedMood!],
+        'note': _noteController.text,
+        'time': TimeOfDay.now().format(context),
+        'date': '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
+      });
+      _selectedMood = null;
+      _noteController.clear();
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Mood saved successfully!'),
+        backgroundColor: kPrimaryColor,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _noteController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: kBackgroundColor,
+      appBar: AppBar(
+        title: const Text(
+          'Mood Tracker',
+          style: TextStyle(fontWeight: FontWeight.bold, color: kTextDark),
+        ),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Mood selector card
+            _buildMoodSelectorCard(),
+            const SizedBox(height: 20),
+
+            // Note input
+            _buildNoteCard(),
+            const SizedBox(height: 20),
+
+            // Save button
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _selectedMood != null ? _saveMood : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: kPrimaryColor,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  elevation: 3,
+                ),
+                child: const Text(
+                  'Save My Mood',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            const SizedBox(height: 28),
+
+            // Mood history
+            if (_moodLog.isNotEmpty) ...[
+              const Text(
+                'Mood History',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: kTextDark,
+                ),
+              ),
+              const SizedBox(height: 12),
+              ..._moodLog.map((entry) => _buildMoodLogCard(entry)),
+            ] else
+              _buildEmptyState(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMoodSelectorCard() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: kCardColor,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'How are you feeling right now?',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: kTextDark,
+            ),
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            'Tap your current mood to log it.',
+            style: TextStyle(color: kTextMid, fontSize: 13),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: _moods.asMap().entries.map((entry) {
+              final i = entry.key;
+              final mood = entry.value;
+              final isSelected = _selectedMood == i;
+              return GestureDetector(
+                onTap: () => setState(() => _selectedMood = i),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeOut,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? (mood['color'] as Color).withOpacity(0.15)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(14),
+                    border: isSelected
+                        ? Border.all(
+                        color: mood['color'] as Color, width: 2)
+                        : Border.all(color: Colors.transparent),
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(
+                        mood['icon'] as IconData,
+                        color: mood['color'] as Color,
+                        size: isSelected ? 38 : 30,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        mood['label'] as String,
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: isSelected
+                              ? mood['color'] as Color
+                              : kTextMid,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNoteCard() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: kCardColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Add a Note (optional)',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: kTextDark,
+              fontSize: 14,
+            ),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: _noteController,
+            maxLines: 3,
+            decoration: InputDecoration(
+              hintText: 'What is on your mind today?',
+              hintStyle: const TextStyle(color: kTextMid),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.grey.shade200),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide:
+                const BorderSide(color: kPrimaryColor, width: 1.5),
+              ),
+              filled: true,
+              fillColor: kBackgroundColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMoodLogCard(Map<String, dynamic> entry) {
+    final mood = entry['mood'] as Map<String, dynamic>;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: kCardColor,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 6,
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              color: (mood['color'] as Color).withOpacity(0.12),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(mood['icon'] as IconData,
+                color: mood['color'] as Color, size: 28),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  mood['label'] as String,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: mood['color'] as Color,
+                    fontSize: 15,
+                  ),
+                ),
+                if ((entry['note'] as String).isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3),
+                    child: Text(
+                      entry['note'] as String,
+                      style: const TextStyle(color: kTextMid, fontSize: 12),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                entry['time'] as String,
+                style: const TextStyle(color: kTextMid, fontSize: 12),
+              ),
+              Text(
+                entry['date'] as String,
+                style: const TextStyle(color: kTextMid, fontSize: 11),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 30),
+        child: Column(
+          children: const [
+            Icon(Icons.mood, color: Colors.grey, size: 60),
+            SizedBox(height: 12),
+            Text(
+              'No mood entries yet.',
+              style: TextStyle(color: kTextMid, fontSize: 15),
+            ),
+            SizedBox(height: 4),
+            Text(
+              'Select your mood and save it above.',
+              style: TextStyle(color: Colors.grey, fontSize: 13),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+//  TAB 3   BREATHING EXERCISE
+// ============================================================
+class BreathingTab extends StatefulWidget {
+  const BreathingTab({super.key});
+
+  @override
+  State<BreathingTab> createState() => _BreathingTabState();
+}
+
+class _BreathingTabState extends State<BreathingTab>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _breathController;
+  late Animation<double> _breathAnim;
+
+  bool _isRunning = false;
+  String _phase = 'Press Start';
+  int _cycleCount = 0;
+  int _currentStep = 0;
+
+  // 4-7-8 breathing: Inhale 4s, Hold 7s, Exhale 8s
+  final List<Map<String, dynamic>> _steps = [
+    {'label': 'Inhale', 'seconds': 4,  'color': Color(0xFF42A5F5)},
+    {'label': 'Hold',   'seconds': 7,  'color': Color(0xFF7E57C2)},
+    {'label': 'Exhale', 'seconds': 8,  'color': Color(0xFF26A69A)},
+  ];
+
+  int _stepSeconds = 0;
+  int _elapsed = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _breathController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 4),
+    );
+    _breathAnim = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(parent: _breathController, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _breathController.dispose();
+    super.dispose();
+  }
+
+  void _start() {
+    setState(() {
+      _isRunning = true;
+      _currentStep = 0;
+      _cycleCount = 0;
+      _elapsed = 0;
+    });
+    _runStep(0);
+  }
+
+  void _stop() {
+    _breathController.stop();
+    setState(() {
+      _isRunning = false;
+      _phase = 'Press Start';
+      _currentStep = 0;
+    });
+  }
+
+  void _runStep(int stepIndex) {
+    if (!_isRunning) return;
+    final step = _steps[stepIndex];
+    final secs = step['seconds'] as int;
+
+    setState(() {
+      _currentStep = stepIndex;
+      _phase = step['label'] as String;
+      _stepSeconds = secs;
+      _elapsed = 0;
+    });
+
+    if (step['label'] == 'Inhale') {
+      _breathController.duration = Duration(seconds: secs);
+      _breathController.forward(from: 0.0);
+    } else if (step['label'] == 'Exhale') {
+      _breathController.duration = Duration(seconds: secs);
+      _breathController.reverse(from: 1.0);
+    }
+
+    Future.delayed(Duration(seconds: secs), () {
+      if (!_isRunning) return;
+      final next = (stepIndex + 1) % _steps.length;
+      if (next == 0) setState(() => _cycleCount++);
+      _runStep(next);
+    });
+  }
+
+  Color get _currentColor =>
+      _isRunning ? _steps[_currentStep]['color'] as Color : kPrimaryColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: kBackgroundColor,
+      appBar: AppBar(
+        title: const Text('Breathing Exercise',
+            style: TextStyle(fontWeight: FontWeight.bold, color: kTextDark)),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            // Technique info
+            _buildTechniqueCard(),
+            const SizedBox(height: 30),
+
+            // Animated breath circle
+            Center(
+              child: AnimatedBuilder(
+                animation: _breathAnim,
+                builder: (context, child) {
+                  final size = 150.0 + (_breathAnim.value * 100);
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: size,
+                    height: size,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _currentColor.withOpacity(0.15),
+                      border: Border.all(
+                        color: _currentColor.withOpacity(0.5),
+                        width: 3,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: _currentColor.withOpacity(0.3),
+                          blurRadius: 30,
+                          spreadRadius: 10,
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          AnimatedDefaultTextStyle(
+                            duration: const Duration(milliseconds: 300),
+                            style: TextStyle(
+                              fontSize: _isRunning ? 20 : 16,
+                              fontWeight: FontWeight.bold,
+                              color: _currentColor,
+                            ),
+                            child: Text(_phase),
+                          ),
+                          if (_isRunning)
+                            Text(
+                              '${_steps[_currentStep]['seconds']}s',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: _currentColor.withOpacity(0.7),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 30),
+
+            // Cycles count
+            if (_isRunning)
+              Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20, vertical: 10),
+                decoration: BoxDecoration(
+                  color: kCardColor,
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.06),
+                      blurRadius: 8,
+                    ),
+                  ],
+                ),
+                child: Text(
+                  'Cycles Completed: $_cycleCount',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: kPrimaryColor,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+
+            const SizedBox(height: 30),
+
+            // Steps timeline
+            _buildStepsTimeline(),
+            const SizedBox(height: 30),
+
+            // Control button
+            ElevatedButton.icon(
+              onPressed: _isRunning ? _stop : _start,
+              icon: Icon(_isRunning ? Icons.stop : Icons.play_arrow),
+              label: Text(
+                _isRunning ? 'Stop Exercise' : 'Start Breathing',
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _isRunning ? Colors.redAccent : kPrimaryColor,
+                foregroundColor: Colors.white,
+                minimumSize: const Size(double.infinity, 54),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                elevation: 4,
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Benefits
+            _buildBenefitsCard(),
+            const SizedBox(height: 30),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTechniqueCard() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: kPrimaryColor.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: kPrimaryColor.withOpacity(0.2)),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: const [
+              Icon(Icons.air, color: kPrimaryColor),
+              SizedBox(width: 8),
+              Text(
+                '4-7-8 Breathing Technique',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: kTextDark,
+                  fontSize: 15,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'This technique calms your nervous system and reduces '
+                'anxiety. Inhale for 4 seconds, hold for 7 seconds, '
+                'then exhale slowly for 8 seconds.',
+            style: TextStyle(color: kTextMid, fontSize: 13, height: 1.5),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStepsTimeline() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: _steps.asMap().entries.map((entry) {
+        final i = entry.key;
+        final step = entry.value;
+        final active = _isRunning && _currentStep == i;
+        final color = step['color'] as Color;
+        return Column(
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              width: active ? 60 : 50,
+              height: active ? 60 : 50,
+              decoration: BoxDecoration(
+                color: active ? color : color.withOpacity(0.15),
+                shape: BoxShape.circle,
+                boxShadow: active
+                    ? [BoxShadow(color: color.withOpacity(0.4), blurRadius: 12)]
+                    : [],
+              ),
+              child: Center(
+                child: Text(
+                  '${step['seconds']}s',
+                  style: TextStyle(
+                    color: active ? Colors.white : color,
+                    fontWeight: FontWeight.bold,
+                    fontSize: active ? 16 : 14,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              step['label'] as String,
+              style: TextStyle(
+                color: active ? color : kTextMid,
+                fontWeight: active ? FontWeight.bold : FontWeight.normal,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildBenefitsCard() {
+    final benefits = [
+      {'icon': Icons.favorite, 'text': 'Reduces heart rate and blood pressure'},
+      {'icon': Icons.psychology, 'text': 'Decreases anxiety and stress levels'},
+      {'icon': Icons.nights_stay, 'text': 'Helps you fall asleep faster'},
+      {'icon': Icons.energy_savings_leaf, 'text': 'Increases focus and energy'},
+    ];
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: kCardColor,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Benefits of Deep Breathing',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: kTextDark,
+              fontSize: 15,
+            ),
+          ),
+          const SizedBox(height: 12),
+          ...benefits.map((b) => Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Row(
+              children: [
+                Icon(b['icon'] as IconData,
+                    color: kSecondaryColor, size: 20),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    b['text'] as String,
+                    style: const TextStyle(
+                        color: kTextMid, fontSize: 13),
+                  ),
+                ),
+              ],
+            ),
+          )),
+        ],
+      ),
+    );
+  }
+}
+
+// ============================================================
+//  TAB 4   WATER TRACKER
+// ============================================================
+class WaterTrackerTab extends StatefulWidget {
+  const WaterTrackerTab({super.key});
+
+  @override
+  State<WaterTrackerTab> createState() => _WaterTrackerTabState();
+}
+
+class _WaterTrackerTabState extends State<WaterTrackerTab>
+    with SingleTickerProviderStateMixin {
+  final int _goal = 8;
+  int _count = 0;
+  final List<String> _log = [];
+  late AnimationController _waveController;
+
+  @override
+  void initState() {
+    super.initState();
+    _waveController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _waveController.dispose();
+    super.dispose();
+  }
+
+  void _addGlass() {
+    if (_count < _goal) {
+      setState(() {
+        _count++;
+        _log.insert(
+            0, 'Glass $_count  ${TimeOfDay.now().format(context)}');
+      });
+    }
+  }
+
+  void _removeGlass() {
+    if (_count > 0) {
+      setState(() {
+        _log.removeAt(0);
+        _count--;
+      });
+    }
+  }
+
+  double get _percent => _count / _goal;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: kBackgroundColor,
+      appBar: AppBar(
+        title: const Text('Hydration Tracker',
+            style: TextStyle(fontWeight: FontWeight.bold, color: kTextDark)),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            // Main water card
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    const Color(0xFF29B6F6),
+                    const Color(0xFF0288D1),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF0288D1).withOpacity(0.35),
+                    blurRadius: 18,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Daily Water Goal',
+                            style: TextStyle(
+                                color: Colors.white70, fontSize: 14),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '$_count / $_goal glasses',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Icon(
+                        _count >= _goal
+                            ? Icons.check_circle
+                            : Icons.water_drop,
+                        color: Colors.white,
+                        size: 48,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: LinearProgressIndicator(
+                      value: _percent,
+                      backgroundColor: Colors.white.withOpacity(0.25),
+                      valueColor:
+                      const AlwaysStoppedAnimation<Color>(Colors.white),
+                      minHeight: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    _count >= _goal
+                        ? 'Goal reached! Great job!'
+                        : '${_goal - _count} more glasses to reach your goal',
+                    style: const TextStyle(
+                        color: Colors.white70, fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // Glass grid display
+            _buildGlassGrid(),
+            const SizedBox(height: 24),
+
+            // Action buttons
+            Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: ElevatedButton.icon(
+                    onPressed: _count < _goal ? _addGlass : null,
+                    icon: const Icon(Icons.add),
+                    label: const Text('Add Glass',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF0288D1),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: _count > 0 ? _removeGlass : null,
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: const Color(0xFF0288D1),
+                      side: const BorderSide(color: Color(0xFF0288D1)),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Icon(Icons.remove),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+
+            // Tips card
+            _buildHydrationTips(),
+            const SizedBox(height: 24),
+
+            // Log
+            if (_log.isNotEmpty) ...[
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Today\'s Log',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: kTextDark),
+                ),
+              ),
+              const SizedBox(height: 10),
+              ..._log.map((entry) => Container(
+                margin: const EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: kCardColor,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.04),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.water_drop,
+                        color: Color(0xFF29B6F6), size: 18),
+                    const SizedBox(width: 10),
+                    Text(
+                      entry,
+                      style: const TextStyle(
+                          color: kTextDark, fontSize: 14),
+                    ),
+                  ],
+                ),
+              )),
+            ],
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGlassGrid() {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        childAspectRatio: 1,
+      ),
+      itemCount: _goal,
+      itemBuilder: (_, i) {
+        final filled = i < _count;
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          decoration: BoxDecoration(
+            color: filled
+                ? const Color(0xFF29B6F6)
+                : const Color(0xFFE3F2FD),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: filled
+                  ? const Color(0xFF0288D1)
+                  : const Color(0xFFB3E5FC),
+            ),
+            boxShadow: filled
+                ? [
+              BoxShadow(
+                color: const Color(0xFF0288D1).withOpacity(0.3),
+                blurRadius: 6,
+              )
+            ]
+                : [],
+          ),
+          child: Icon(
+            Icons.water_drop,
+            color: filled ? Colors.white : const Color(0xFF90CAF9),
+            size: 28,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildHydrationTips() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE1F5FE),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF81D4FA)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          Row(
+            children: [
+              Icon(Icons.tips_and_updates,
+                  color: Color(0xFF0288D1), size: 20),
+              SizedBox(width: 8),
+              Text(
+                'Hydration Tips',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF01579B),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          Text(
+            'Drink a glass of water right after waking up. '
+                'Carry a reusable bottle with you. '
+                'Add lemon or cucumber for flavor. '
+                'Set reminders every 2 hours to stay on track.',
+            style: TextStyle(
+                color: Color(0xFF0277BD), fontSize: 13, height: 1.6),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ============================================================
+//  TAB 5   COMMUNITY
+// ============================================================
+class CommunityTab extends StatefulWidget {
+  const CommunityTab({super.key});
+
+  @override
+  State<CommunityTab> createState() => _CommunityTabState();
+}
+
+class _CommunityTabState extends State<CommunityTab> {
+  final List<Map<String, dynamic>> _posts = [
+    {
+      'name': 'Sarah M.',
+      'time': '2 min ago',
+      'message': 'Just finished a 10-minute meditation session. Feeling much calmer and ready for the day!',
+      'likes': 24,
+      'comments': 5,
+      'liked': false,
+      'category': 'Meditation',
+      'color': Color(0xFF7E57C2),
+    },
+    {
+      'name': 'Ahmed K.',
+      'time': '15 min ago',
+      'message': 'Completed all 6 daily goals today for the first time! Small wins matter a lot.',
+      'likes': 47,
+      'comments': 12,
+      'liked': false,
+      'category': 'Achievement',
+      'color': Color(0xFF26A69A),
+    },
+    {
+      'name': 'Priya S.',
+      'time': '1 hour ago',
+      'message': 'Reminder: it is okay to have a bad day. Tomorrow is a new beginning. Be kind to yourself.',
+      'likes': 89,
+      'comments': 23,
+      'liked': false,
+      'category': 'Motivation',
+      'color': Color(0xFFEF5350),
+    },
+    {
+      'name': 'James L.',
+      'time': '3 hours ago',
+      'message': 'Tried the 4-7-8 breathing technique for the first time before bed. Fell asleep in under 10 minutes!',
+      'likes': 61,
+      'comments': 18,
+      'liked': false,
+      'category': 'Breathing',
+      'color': Color(0xFF42A5F5),
+    },
+    {
+      'name': 'Fatima A.',
+      'time': '5 hours ago',
+      'message': 'Walking in the park for 20 minutes every morning has completely changed my mood. Highly recommend it.',
+      'likes': 53,
+      'comments': 9,
+      'liked': false,
+      'category': 'Exercise',
+      'color': Color(0xFF66BB6A),
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: kBackgroundColor,
+      appBar: AppBar(
+        title: const Text('Community',
+            style: TextStyle(fontWeight: FontWeight.bold, color: kTextDark)),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search, color: kTextDark),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          // Category chips
+          _buildCategoryBar(),
+
+          // Posts list
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: _posts.length,
+              itemBuilder: (_, i) => _buildPostCard(i),
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _showPostDialog,
+        backgroundColor: kPrimaryColor,
+        foregroundColor: Colors.white,
+        icon: const Icon(Icons.edit),
+        label: const Text('Share'),
+      ),
+    );
+  }
+
+  Widget _buildCategoryBar() {
+    final categories = ['All', 'Meditation', 'Exercise', 'Motivation', 'Breathing', 'Achievement'];
+    return SizedBox(
+      height: 48,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: categories.length,
+        itemBuilder: (_, i) => Padding(
+          padding: const EdgeInsets.only(right: 8, top: 8, bottom: 8),
+          child: FilterChip(
+            label: Text(categories[i]),
+            selected: i == 0,
+            onSelected: (_) {},
+            selectedColor: kPrimaryColor.withOpacity(0.15),
+            labelStyle: TextStyle(
+              color: i == 0 ? kPrimaryColor : kTextMid,
+              fontWeight: i == 0 ? FontWeight.bold : FontWeight.normal,
+              fontSize: 12,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPostCard(int index) {
+    final post = _posts[index];
+    return Container(
+      margin: const EdgeInsets.only(bottom: 14),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: kCardColor,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 22,
+                backgroundColor:
+                (post['color'] as Color).withOpacity(0.15),
+                child: Text(
+                  (post['name'] as String)[0],
+                  style: TextStyle(
+                    color: post['color'] as Color,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      post['name'] as String,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: kTextDark,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      post['time'] as String,
+                      style: const TextStyle(
+                          color: kTextMid, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: (post['color'] as Color).withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  post['category'] as String,
+                  style: TextStyle(
+                    color: post['color'] as Color,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+
+          // Message
+          Text(
+            post['message'] as String,
+            style: const TextStyle(
+              color: kTextDark,
+              fontSize: 14,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 14),
+
+          // Actions
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    post['liked'] = !(post['liked'] as bool);
+                    if (post['liked'] as bool) {
+                      post['likes'] = (post['likes'] as int) + 1;
+                    } else {
+                      post['likes'] = (post['likes'] as int) - 1;
+                    }
+                  });
+                },
+                child: Row(
+                  children: [
+                    Icon(
+                      (post['liked'] as bool)
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color: (post['liked'] as bool)
+                          ? Colors.redAccent
+                          : kTextMid,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      '${post['likes']}',
+                      style: TextStyle(
+                        color: (post['liked'] as bool)
+                            ? Colors.redAccent
+                            : kTextMid,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 20),
+              Row(
+                children: [
+                  const Icon(Icons.chat_bubble_outline,
+                      color: kTextMid, size: 18),
+                  const SizedBox(width: 5),
+                  Text(
+                    '${post['comments']}',
+                    style: const TextStyle(color: kTextMid, fontSize: 13),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              const Icon(Icons.share_outlined, color: kTextMid, size: 18),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showPostDialog() {
+    final controller = TextEditingController();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => Container(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Share with the Community',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: kTextDark),
+              ),
+              const SizedBox(height: 14),
+              TextField(
+                controller: controller,
+                maxLines: 4,
+                decoration: InputDecoration(
+                  hintText: 'Share a tip, achievement, or motivation...',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey.shade200),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide:
+                    const BorderSide(color: kPrimaryColor, width: 1.5),
+                  ),
+                  filled: true,
+                  fillColor: kBackgroundColor,
+                ),
+              ),
+              const SizedBox(height: 14),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (controller.text.trim().isNotEmpty) {
+                      setState(() {
+                        _posts.insert(0, {
+                          'name': 'You',
+                          'time': 'Just now',
+                          'message': controller.text.trim(),
+                          'likes': 0,
+                          'comments': 0,
+                          'liked': false,
+                          'category': 'General',
+                          'color': kPrimaryColor,
+                        });
+                      });
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Post shared with the community!'),
+                          backgroundColor: kPrimaryColor,
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: kPrimaryColor,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    'Post',
+                    style: TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
